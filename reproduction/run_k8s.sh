@@ -90,13 +90,24 @@ mkdir -p "$ASSET_ROOT" "$HF_CACHE"
   fi
 ) 9>"$SHARED_ROOT/assets.lock"
 
-python "$REPO_ROOT/reproduction/run_reproduction.py" \
-  --config "$REPO_ROOT/reproduction/config.json" \
-  --dataset "$REPO_ROOT/data/bcplus_qa_sample100.jsonl" \
-  --corpus "$CORPUS_ROOT" \
-  --index "$INDEX_ROOT" \
-  --docid-map "$INDEX_ROOT/docid_to_path.json" \
-  --agent-model "$AGENT_MODEL_ROOT" \
-  --embedding-model "$EMBED_MODEL_ROOT"
+MODE="$(python -c 'import json; print(json.load(open("reproduction/config.json")).get("mode", "agent"))')"
+if [ "$MODE" = "mechanism" ]; then
+  python "$REPO_ROOT/reproduction/run_mechanism_diagnostic.py" \
+    --config "$REPO_ROOT/reproduction/config.json" \
+    --dataset "$REPO_ROOT/data/bcplus_qa_sample100.jsonl" \
+    --corpus "$CORPUS_ROOT" \
+    --index "$INDEX_ROOT" \
+    --docid-map "$INDEX_ROOT/docid_to_path.json" \
+    --embedding-model "$EMBED_MODEL_ROOT"
+else
+  python "$REPO_ROOT/reproduction/run_reproduction.py" \
+    --config "$REPO_ROOT/reproduction/config.json" \
+    --dataset "$REPO_ROOT/data/bcplus_qa_sample100.jsonl" \
+    --corpus "$CORPUS_ROOT" \
+    --index "$INDEX_ROOT" \
+    --docid-map "$INDEX_ROOT/docid_to_path.json" \
+    --agent-model "$AGENT_MODEL_ROOT" \
+    --embedding-model "$EMBED_MODEL_ROOT"
+fi
 
 echo "finished_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
