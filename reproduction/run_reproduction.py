@@ -129,15 +129,15 @@ class Models:
         return vectors.astype(np.float32)
 
 
-def read_rows(path: str, limit: int) -> list[dict[str, Any]]:
+def read_rows(path: str, limit: int, offset: int = 0) -> list[dict[str, Any]]:
     rows = []
     with open(path, encoding="utf-8") as handle:
         for line in handle:
             if line.strip():
                 rows.append(json.loads(line))
-            if len(rows) >= limit:
+            if len(rows) >= offset + limit:
                 break
-    return rows
+    return rows[offset : offset + limit]
 
 
 def split_paragraphs(text: str) -> list[str]:
@@ -499,7 +499,11 @@ def summarize(results: list[dict[str, Any]], config: dict[str, Any], elapsed: fl
         "allocated_gpus": int(config["workers"]),
         "agent_model": config["agent_model"],
         "embedding_model": config["embedding_model"],
-        "subset": "first 16 rows of released bcplus_qa_sample100.jsonl",
+        "subset": (
+            f"rows {int(config.get('query_offset', 0)) + 1}-"
+            f"{int(config.get('query_offset', 0)) + len(results)} of released "
+            "bcplus_qa_sample100.jsonl"
+        ),
     }
     return summary
 
@@ -516,7 +520,11 @@ def main() -> None:
     args = parser.parse_args()
 
     config = json.loads(Path(args.config).read_text())
-    rows = read_rows(args.dataset, int(config["query_limit"]))
+    rows = read_rows(
+        args.dataset,
+        int(config["query_limit"]),
+        int(config.get("query_offset", 0)),
+    )
     workers = int(config["workers"])
     assignments = [rows[i::workers] for i in range(workers)]
     args_dict = vars(args)
