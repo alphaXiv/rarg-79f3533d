@@ -167,6 +167,11 @@ def search_scope(scope_file: str, term: str, candidate_limit: int) -> list[Match
         timeout=180,
         check=False,
     )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"ripgrep pipeline failed with exit code {proc.returncode} for term={term!r}: "
+            f"{proc.stderr[-1000:] if proc.stderr else 'no stderr'}"
+        )
     matches: list[Match] = []
     for line in proc.stdout.splitlines():
         parts = line.split(":", 2)
@@ -224,7 +229,8 @@ Potential entry passages:
 {entry_text if entry_text else "(none)"}
 
 Return JSON only: {{"terms": ["literal phrase", ...]}}.
-Give 6 short literal ripgrep search strings, ordered from most distinctive to broader.
+    Give 6 short literal ripgrep search strings, ordered from most distinctive to broader.
+    Each string MUST be either one distinctive word or an exact phrase of at most 3 words.
 Use names, dates, titles, places, and unusual clue phrases. Do not use regex syntax."""
     raw = models.generate(
         "You design high-precision corpus searches for multi-document questions.",
@@ -233,10 +239,21 @@ Use names, dates, titles, places, and unusual clue phrases. Do not use regex syn
     )
     parsed = extract_json(raw)
     terms = parsed.get("terms", []) if isinstance(parsed, dict) else []
+    stopwords = {
+        "about", "after", "author", "before", "between", "company", "during",
+        "first", "from", "historic", "middle", "name", "paper", "person",
+        "specific", "their", "university", "what", "when", "where", "which",
+        "whose", "with", "would",
+    }
     cleaned: list[str] = []
     for term in terms:
         term = re.sub(r"\s+", " ", str(term)).strip(" \"'`")
-        if 2 <= len(term) <= 100 and term.casefold() not in {x.casefold() for x in cleaned}:
+        tokens = re.findall(r"[A-Za-z0-9£'-]+", term)
+        if len(tokens) > 3:
+            candidates = [token for token in tokens if token.casefold() not in stopwords and len(token) >= 4]
+            tokens = [max(candidates, key=len)] if candidates else tokens[:1]
+        term = " ".join(tokens)
+        if 2 <= len(term) <= 80 and term.casefold() not in {x.casefold() for x in cleaned}:
             cleaned.append(term)
     if not cleaned:
         words = re.findall(r"[A-Za-z0-9£'-]{4,}", question)
@@ -269,18 +286,25 @@ Answer only when the evidence supports a specific answer. Otherwise propose one 
 
 
 def judge(models: Models, question: str, reference: str, prediction: str) -> bool:
+    if "insufficient evidence" in prediction.casefold() or "unknown" == prediction.strip().casefold():
+        return False
+    if exact_control(prediction, reference):
+        return True
     prompt = f"""Question: {question}
 Reference answer: {reference}
 Candidate answer: {prediction}
 
-Judge whether the candidate conveys the same answer as the reference. Ignore case,
-punctuation, articles, and harmless explanation. Return exactly CORRECT or INCORRECT."""
+Judge whether the candidate explicitly identifies the same answer as the reference.
+Missing, uncertain, abstaining, or merely related candidates are incorrect. Ignore only
+case, punctuation, articles, and harmless explanation.
+Return JSON only: {{"correct": true}} or {{"correct": false}}."""
     raw = models.generate(
         "You are the released-evaluator-compatible answer correctness judge.",
         prompt,
-        max_new_tokens=16,
+        max_new_tokens=48,
     )
-    return raw.strip().upper().startswith("CORRECT")
+    parsed = extract_json(raw)
+    return bool(parsed.get("correct")) if isinstance(parsed, dict) else False
 
 
 def run_query(
@@ -326,19 +350,33 @@ def run_query(
     candidate_matches = len(entry_points)
     prediction = ""
     trace: list[dict[str, Any]] = []
+    used_terms: set[str] = set()
 
     for step in range(1, int(config["max_steps"]) + 1):
         term = terms.pop(0) if terms else ""
         if not term:
             break
+        if term.casefold() in used_terms:
+            continue
+        used_terms.add(term.casefold())
         candidate_limit = (
             int(config["rerank_candidates"]) if condition == "rarg_pp" else int(config["matches_per_step"])
         )
         candidates = search_scope(str(scope_path), term, candidate_limit)
+        searched_term = term
+        if not candidates and len(term.split()) > 1:
+            fallback_tokens = [
+                token for token in re.findall(r"[A-Za-z0-9£'-]+", term)
+                if len(token) >= 4
+            ]
+            if fallback_tokens:
+                searched_term = max(fallback_tokens, key=len)
+                used_terms.add(searched_term.casefold())
+                candidates = search_scope(str(scope_path), searched_term, candidate_limit)
         candidate_matches += len(candidates)
         shown = candidates
         if condition == "rarg_pp" and len(candidates) > int(config["matches_per_step"]):
-            query = question + "\nLocal search intent: " + term
+            query = question + "\nLocal search intent: " + searched_term
             vectors = models.embed([m.text for m in candidates])
             qvec = models.embed([query], query=True)[0]
             order = np.argsort(-(vectors @ qvec))[: int(config["matches_per_step"])]
@@ -353,7 +391,7 @@ def run_query(
         trace.append(
             {
                 "step": step,
-                "term": term,
+                "term": searched_term,
                 "candidate_count": len(candidates),
                 "shown_count": len(shown),
                 "gold_visible": gold_visible(shown, gold_paths, corpus),
@@ -364,7 +402,11 @@ def run_query(
             prediction = decision["answer"].strip()
             break
         next_term = decision.get("next_term", "").strip(" \"'`")
-        if next_term and next_term.casefold() not in {term.casefold() for term in terms}:
+        if (
+            next_term
+            and next_term.casefold() not in used_terms
+            and next_term.casefold() not in {queued.casefold() for queued in terms}
+        ):
             terms.insert(0, next_term[:100])
 
     if not prediction:

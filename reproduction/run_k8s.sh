@@ -32,6 +32,11 @@ python -m pip install --quiet --disable-pip-version-check \
   "pyarrow>=18,<22" "numpy<3" "scipy<2" "openai>=1,<3"
 python -m pip install --quiet --disable-pip-version-check -e "$REPO_ROOT"
 
+apt-get update -qq
+apt-get install -y -qq ripgrep >/dev/null
+command -v rg
+rg --version | head -1
+
 mkdir -p "$ASSET_ROOT" "$HF_CACHE"
 
 (
