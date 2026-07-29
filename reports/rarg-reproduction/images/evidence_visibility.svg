@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" role="img">
+<style>text{font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;fill:#172033}.title{font-size:25px;font-weight:700}.sub{font-size:14px;fill:#667085}.axis{font-size:13px;fill:#667085}.label{font-size:14px;font-weight:650}.value{font-size:13px;font-weight:700}.note{font-size:12px;fill:#667085}</style>
+<rect width="100%" height="100%" fill="#FFFFFF" rx="12"/>
+<text class="title" x="55" y="45">Local reranking increased early gold-evidence visibility</text>
+<text class="sub" x="55" y="70">Share of questions whose gold document appeared at the entry point or in the first 30 matches</text>
+<line x1="95" y1="405.0" x2="845" y2="405.0" stroke="#D9E0EA"/>
+<text class="axis" x="83" y="410.0" text-anchor="end">0%</text>
+<line x1="95" y1="319.3" x2="845" y2="319.3" stroke="#D9E0EA"/>
+<text class="axis" x="83" y="324.3" text-anchor="end">10%</text>
+<line x1="95" y1="233.6" x2="845" y2="233.6" stroke="#D9E0EA"/>
+<text class="axis" x="83" y="238.6" text-anchor="end">20%</text>
+<line x1="95" y1="147.9" x2="845" y2="147.9" stroke="#D9E0EA"/>
+<text class="axis" x="83" y="152.9" text-anchor="end">30%</text>
+<rect x="160" y="405.0" width="42" height="2.0" rx="4" fill="#D97706"/>
+<text class="value" x="181" y="397.0" text-anchor="middle">0%</text>
+<rect x="220" y="351.4" width="42" height="53.6" rx="4" fill="#0F766E"/>
+<text class="value" x="241" y="343.4" text-anchor="middle">6.25%</text>
+<rect x="280" y="297.9" width="42" height="107.1" rx="4" fill="#E11D48"/>
+<text class="value" x="301" y="289.9" text-anchor="middle">12.5%</text>
+<text class="label" x="220" y="447" text-anchor="middle">Rows 1–16</text>
+<rect x="410" y="351.4" width="42" height="53.6" rx="4" fill="#D97706"/>
+<text class="value" x="431" y="343.4" text-anchor="middle">6.25%</text>
+<rect x="470" y="190.7" width="42" height="214.3" rx="4" fill="#0F766E"/>
+<text class="value" x="491" y="182.7" text-anchor="middle">25%</text>
+<rect x="530" y="137.1" width="42" height="267.9" rx="4" fill="#E11D48"/>
+<text class="value" x="551" y="129.1" text-anchor="middle">31.25%</text>
+<text class="label" x="470" y="447" text-anchor="middle">Rows 17–32</text>
+<rect x="660" y="378.2" width="42" height="26.8" rx="4" fill="#D97706"/>
+<text class="value" x="681" y="370.2" text-anchor="middle">3.125%</text>
+<rect x="720" y="271.1" width="42" height="133.9" rx="4" fill="#0F766E"/>
+<text class="value" x="741" y="263.1" text-anchor="middle">15.625%</text>
+<rect x="780" y="217.5" width="42" height="187.5" rx="4" fill="#E11D48"/>
+<text class="value" x="801" y="209.5" text-anchor="middle">21.875%</text>
+<text class="label" x="720" y="447" text-anchor="middle">Pooled</text>
+<rect x="205" y="473" width="12" height="12" rx="2" fill="#D97706"/>
+<text class="note" x="224" y="484">Paragraph entry</text>
+<rect x="410" y="473" width="12" height="12" rx="2" fill="#0F766E"/>
+<text class="note" x="429" y="484">Ordered top 30</text>
+<rect x="615" y="473" width="12" height="12" rx="2" fill="#E11D48"/>
+<text class="note" x="634" y="484">Reranked top 30</text>
+</svg>

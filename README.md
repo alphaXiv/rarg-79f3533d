@@ -1,3 +1,50 @@
+# Open-weight reproduction: relevance-guided corpus interaction
+
+[![Paper](https://img.shields.io/badge/arXiv-2607.24223-b31b1b.svg)](https://arxiv.org/abs/2607.24223)
+[![Open in molab](https://marimo.io/molab-shield.svg)](https://molab.marimo.io/github/alphaXiv/rarg-79f3533d/blob/main/notebooks/rarg_reproduction.py)
+
+**Verdict: partially reproduced.** We tested the paper's two central BrowseComp-Plus claims on the released 100K corpus: whether relevance-ordered `ripgrep` traversal exposes evidence earlier than relevance-agnostic direct corpus interaction, and whether paragraph entry points plus local match reranking add further gains. On the same 32 public questions, pooled Qwen3-8B open-judge accuracy rose from **3.1% DCI → 6.3% RARG → 12.5% RARG+ → 15.6% RARG++**, while mean tool steps fell from **3.22 → 1.84 → 1.50 → 1.53**. Exact-match controls were 3.1%, 3.1%, 3.1%, and 6.3%.
+
+The strongest result is mechanistic: relevance moved the median gold document from corpus rank **25,912.5 to 154.5** (122× median speedup), and local reranking raised first-30 gold visibility from 15.6% to 21.9%. The answer gain was concentrated in the second fixed 16-question slice, so the direction is encouraging but not a full match to the paper's 78–84% result.
+
+This bounded reproduction substituted Qwen3-8B for the proprietary GPT-5.4-mini-family agent and judge, Qwen3-Embedding-0.6B for relevance, and 32 of the paper's 100 questions; it omitted BRIGHT and the 1M corpus. Formal runs used **Kubernetes** on **NVIDIA RTX PRO 6000 Blackwell** GPUs, four GPUs per run, **16 GPUs peak concurrent**, and a measured successful-evidence window of **0.751 wall hours**.
+
+- [Read the illustrated tutorial-style report](reports/rarg-reproduction/report.md)
+- [Explore the self-contained marimo notebook](notebooks/rarg_reproduction.py)
+- [Inspect machine-readable results](results/summary.json)
+- Exact public Molab URL: https://molab.marimo.io/github/alphaXiv/rarg-79f3533d/blob/main/notebooks/rarg_reproduction.py
+
+## Paper number versus observed number
+
+| Condition | Paper: accuracy / tool calls | Observed: judged / exact accuracy | Observed mean steps |
+|---|---:|---:|---:|
+| DCI | 78% / 99.1 | 3.1% / 3.1% | 3.22 |
+| RARG | 80% / 29.8 | 6.3% / 3.1% | 1.84 |
+| RARG+ | 81% / 29.6 | 12.5% / 3.1% | 1.50 |
+| RARG++ | 84% / 23.9 | 15.6% / 6.3% | 1.53 |
+
+## Experiment log
+
+Every formal branch used the same committed Kubernetes manifest and the exact command shown below. Each run allocated four GPUs; four scientifically distinct runs were concurrent when the experiment round allowed it.
+
+| Branch / experiment | Purpose or change | Exact run command | Assessment / outcome | Compute |
+|---|---|---|---|---|
+| `main` | Public report, notebook, figures, and reusable harness | Not run as an experiment (publication surface) | Presentation-only | — |
+| [`orx/dci-rg-enabled-control`](https://github.com/alphaXiv/rarg-79f3533d/tree/orx/dci-rg-enabled-control) | DCI, rows 1–16 | `bash reproduction/run_k8s.sh` | 0% judged; 2.81 steps | Kubernetes, 4× RTX PRO 6000 Blackwell |
+| [`orx/rarg-ordering-rg-enabled`](https://github.com/alphaXiv/rarg-79f3533d/tree/orx/rarg-ordering-rg-enabled) | Document ordering, rows 1–16 | `bash reproduction/run_k8s.sh` | 0% judged; 1.56 steps | Kubernetes, 4× RTX PRO 6000 Blackwell |
+| [`orx/rarg-plus-seeding-rg-enabled`](https://github.com/alphaXiv/rarg-79f3533d/tree/orx/rarg-plus-seeding-rg-enabled) | Paragraph entry points, rows 1–16 | `bash reproduction/run_k8s.sh` | 0% judged; 12.5% evidence recall | Kubernetes, 4× RTX PRO 6000 Blackwell |
+| [`orx/narrow-local-rerank-pool`](https://github.com/alphaXiv/rarg-79f3533d/tree/orx/narrow-local-rerank-pool) | 120-match local reranking, rows 1–16 | `bash reproduction/run_k8s.sh` | 0% judged; 12.5% evidence recall | Kubernetes, 4× RTX PRO 6000 Blackwell |
+| [`orx/dci-second-16-query-slice`](https://github.com/alphaXiv/rarg-79f3533d/tree/orx/dci-second-16-query-slice) | DCI, rows 17–32 | `bash reproduction/run_k8s.sh` | 6.3% judged; 3.63 steps | Kubernetes, 4× RTX PRO 6000 Blackwell |
+| [`orx/rarg-ordering-second-16-query-slice`](https://github.com/alphaXiv/rarg-79f3533d/tree/orx/rarg-ordering-second-16-query-slice) | Document ordering, rows 17–32 | `bash reproduction/run_k8s.sh` | 12.5% judged; 2.13 steps | Kubernetes, 4× RTX PRO 6000 Blackwell |
+| [`orx/rarg-plus-second-16-query-slice`](https://github.com/alphaXiv/rarg-79f3533d/tree/orx/rarg-plus-second-16-query-slice) | Paragraph entry points, rows 17–32 | `bash reproduction/run_k8s.sh` | 25.0% judged; 1.81 steps | Kubernetes, 4× RTX PRO 6000 Blackwell |
+| [`orx/narrow-rarg-plus-plus-second-slice`](https://github.com/alphaXiv/rarg-79f3533d/tree/orx/narrow-rarg-plus-plus-second-slice) | 120-match local reranking, rows 17–32 | `bash reproduction/run_k8s.sh` | 31.3% judged; 1.69 steps | Kubernetes, 4× RTX PRO 6000 Blackwell |
+| [`orx/paired-relevance-mechanism-diagnostic`](https://github.com/alphaXiv/rarg-79f3533d/tree/orx/paired-relevance-mechanism-diagnostic) | Gold-rank and early-evidence diagnostic, rows 1–16 | `bash reproduction/run_k8s.sh` | 43.9× median rank speedup; reranking doubled top-30 visibility | Kubernetes, 4× RTX PRO 6000 Blackwell |
+| [`orx/mechanism-diagnostic-second-slice`](https://github.com/alphaXiv/rarg-79f3533d/tree/orx/mechanism-diagnostic-second-slice) | Gold-rank and early-evidence diagnostic, rows 17–32 | `bash reproduction/run_k8s.sh` | 305.6× median rank speedup; top-30 visibility 25.0%→31.3% | Kubernetes, 4× RTX PRO 6000 Blackwell |
+
+The default public configuration runs the bounded RARG++ condition on rows 1–16. Change only committed `reproduction/config.json` to recreate another condition, then launch with `orx exp run --backend k8s`; formal experiment branches preserve the exact configurations used above.
+
+---
+
 # RARG: Relevance-Aware RGrep Search
 
 Official code for the paper **"A New Role for Relevance: Guiding Corpus Interaction in Agentic Search"**.

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" role="img">
+<style>text{font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;fill:#172033}.title{font-size:25px;font-weight:700}.sub{font-size:14px;fill:#667085}.axis{font-size:13px;fill:#667085}.label{font-size:14px;font-weight:650}.value{font-size:13px;font-weight:700}.note{font-size:12px;fill:#667085}</style>
+<rect width="100%" height="100%" fill="#FFFFFF" rx="12"/>
+<text class="title" x="55" y="45">The answer gain was concentrated in the second fixed slice</text>
+<text class="sub" x="55" y="70">Open-judge accuracy; every bar contains the same 16 questions across conditions</text>
+<line x1="105" y1="410.0" x2="845" y2="410.0" stroke="#D9E0EA"/>
+<text class="axis" x="90" y="415.0" text-anchor="end">0%</text>
+<line x1="105" y1="322.9" x2="845" y2="322.9" stroke="#D9E0EA"/>
+<text class="axis" x="90" y="327.9" text-anchor="end">10%</text>
+<line x1="105" y1="235.7" x2="845" y2="235.7" stroke="#D9E0EA"/>
+<text class="axis" x="90" y="240.7" text-anchor="end">20%</text>
+<line x1="105" y1="148.6" x2="845" y2="148.6" stroke="#D9E0EA"/>
+<text class="axis" x="90" y="153.6" text-anchor="end">30%</text>
+<line x1="146.5" y1="408" x2="194.5" y2="408" stroke="#8B95A5" stroke-width="4"/>
+<text class="value" x="170.5" y="401.0" text-anchor="middle">0.0%</text>
+<text class="axis" x="170.5" y="433" text-anchor="middle">DCI</text>
+<line x1="209.5" y1="408" x2="257.5" y2="408" stroke="#2563EB" stroke-width="4"/>
+<text class="value" x="233.5" y="401.0" text-anchor="middle">0.0%</text>
+<text class="axis" x="233.5" y="433" text-anchor="middle">RARG</text>
+<line x1="272.5" y1="408" x2="320.5" y2="408" stroke="#7C3AED" stroke-width="4"/>
+<text class="value" x="296.5" y="401.0" text-anchor="middle">0.0%</text>
+<text class="axis" x="296.5" y="433" text-anchor="middle">RARG+</text>
+<line x1="335.5" y1="408" x2="383.5" y2="408" stroke="#E11D48" stroke-width="4"/>
+<text class="value" x="359.5" y="401.0" text-anchor="middle">0.0%</text>
+<text class="axis" x="359.5" y="433" text-anchor="middle">RARG++</text>
+<text class="label" x="265" y="472" text-anchor="middle">Rows 1–16</text>
+<rect x="531.5" y="355.5" width="48" height="54.5" rx="5" fill="#8B95A5"/>
+<text class="value" x="555.5" y="346.5" text-anchor="middle">6.2%</text>
+<text class="axis" x="555.5" y="433" text-anchor="middle">DCI</text>
+<rect x="594.5" y="301.1" width="48" height="108.9" rx="5" fill="#2563EB"/>
+<text class="value" x="618.5" y="292.1" text-anchor="middle">12.5%</text>
+<text class="axis" x="618.5" y="433" text-anchor="middle">RARG</text>
+<rect x="657.5" y="192.1" width="48" height="217.9" rx="5" fill="#7C3AED"/>
+<text class="value" x="681.5" y="183.1" text-anchor="middle">25.0%</text>
+<text class="axis" x="681.5" y="433" text-anchor="middle">RARG+</text>
+<rect x="720.5" y="137.7" width="48" height="272.3" rx="5" fill="#E11D48"/>
+<text class="value" x="744.5" y="128.7" text-anchor="middle">31.2%</text>
+<text class="axis" x="744.5" y="433" text-anchor="middle">RARG++</text>
+<text class="label" x="650" y="472" text-anchor="middle">Rows 17–32</text>
+</svg>

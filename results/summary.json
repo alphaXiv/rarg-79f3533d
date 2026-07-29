@@ -1,0 +1,57 @@
+{
+  "paper": {
+    "id": "2607.24223",
+    "browsecomp_plus_100k": {
+      "accuracy_percent": {"DCI": 78, "RARG": 80, "RARG+": 81, "RARG++": 84},
+      "tool_calls": {"DCI": 99.1, "RARG": 29.8, "RARG+": 29.6, "RARG++": 23.9}
+    }
+  },
+  "reproduction": {
+    "benchmark": "BrowseComp-Plus 100K",
+    "subset": "first 32 rows of released data/bcplus_qa_sample100.jsonl",
+    "n": 32,
+    "agent_model": "Qwen/Qwen3-8B",
+    "judge_model": "Qwen/Qwen3-8B",
+    "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
+    "conditions": {
+      "DCI": {"judge_accuracy": 0.03125, "exact_accuracy": 0.03125, "evidence_recall": 0.03125, "mean_tool_steps": 3.21875, "mean_observed_matches": 88.5},
+      "RARG": {"judge_accuracy": 0.0625, "exact_accuracy": 0.03125, "evidence_recall": 0.15625, "mean_tool_steps": 1.84375, "mean_observed_matches": 51.03125},
+      "RARG+": {"judge_accuracy": 0.125, "exact_accuracy": 0.03125, "evidence_recall": 0.1875, "mean_tool_steps": 1.5, "mean_observed_matches": 46.0},
+      "RARG++": {"judge_accuracy": 0.15625, "exact_accuracy": 0.0625, "evidence_recall": 0.1875, "mean_tool_steps": 1.53125, "mean_observed_matches": 44.96875}
+    },
+    "slices": {
+      "rows_1_16": {
+        "DCI": {"judge_accuracy": 0.0, "exact_accuracy": 0.0, "evidence_recall": 0.0, "mean_tool_steps": 2.8125},
+        "RARG": {"judge_accuracy": 0.0, "exact_accuracy": 0.0, "evidence_recall": 0.0, "mean_tool_steps": 1.5625},
+        "RARG+": {"judge_accuracy": 0.0, "exact_accuracy": 0.0, "evidence_recall": 0.125, "mean_tool_steps": 1.1875},
+        "RARG++": {"judge_accuracy": 0.0, "exact_accuracy": 0.0, "evidence_recall": 0.125, "mean_tool_steps": 1.375}
+      },
+      "rows_17_32": {
+        "DCI": {"judge_accuracy": 0.0625, "exact_accuracy": 0.0625, "evidence_recall": 0.0625, "mean_tool_steps": 3.625},
+        "RARG": {"judge_accuracy": 0.125, "exact_accuracy": 0.0625, "evidence_recall": 0.3125, "mean_tool_steps": 2.125},
+        "RARG+": {"judge_accuracy": 0.25, "exact_accuracy": 0.0625, "evidence_recall": 0.25, "mean_tool_steps": 1.8125},
+        "RARG++": {"judge_accuracy": 0.3125, "exact_accuracy": 0.125, "evidence_recall": 0.25, "mean_tool_steps": 1.6875}
+      }
+    },
+    "mechanism": {
+      "n": 32,
+      "median_lexicographic_gold_rank": 25912.5,
+      "median_relevance_gold_rank": 154.5,
+      "median_rank_speedup": 122.18122898453262,
+      "relevance_recall_at_100": 0.375,
+      "relevance_recall_at_1000": 0.65625,
+      "relevance_recall_at_10000": 0.9375,
+      "entry_gold_visibility": 0.03125,
+      "ordered_top30_gold_visibility": 0.15625,
+      "reranked_top30_gold_visibility": 0.21875
+    },
+    "compute": {
+      "backend": "kubernetes",
+      "gpu_model": "NVIDIA RTX PRO 6000 Blackwell",
+      "peak_concurrent_gpu_count": 16,
+      "successful_evidence_window_started_utc": "2026-07-29T01:21:34Z",
+      "successful_evidence_window_finished_utc": "2026-07-29T02:06:37Z",
+      "wall_hours": 0.751
+    }
+  }
+}
