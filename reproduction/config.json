@@ -1,10 +1,10 @@
 {
-  "condition": "rarg_plus",
+  "condition": "rarg_pp",
   "query_limit": 16,
   "workers": 4,
   "max_steps": 6,
   "matches_per_step": 30,
-  "rerank_candidates": 500,
+  "rerank_candidates": 120,
   "entry_paragraphs": 8,
   "entry_document_limit": 20,
   "agent_model": "Qwen/Qwen3-8B",
