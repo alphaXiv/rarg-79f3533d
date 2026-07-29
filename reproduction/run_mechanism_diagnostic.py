@@ -24,14 +24,14 @@ STOPWORDS = {
 }
 
 
-def load_rows(path: Path, limit: int) -> list[dict[str, Any]]:
+def load_rows(path: Path, limit: int, offset: int = 0) -> list[dict[str, Any]]:
     rows = []
     for line in path.read_text().splitlines():
         if line.strip():
             rows.append(json.loads(line))
-        if len(rows) == limit:
+        if len(rows) == offset + limit:
             break
-    return rows
+    return rows[offset : offset + limit]
 
 
 def query_text(text: str) -> str:
@@ -106,7 +106,11 @@ def main() -> None:
 
     started = time.perf_counter()
     config = json.loads(args.config.read_text())
-    rows = load_rows(args.dataset, int(config["query_limit"]))
+    rows = load_rows(
+        args.dataset,
+        int(config["query_limit"]),
+        int(config.get("query_offset", 0)),
+    )
     paths: list[str] = json.loads((args.index / "paths.json").read_text())
     docid_map: dict[str, str] = json.loads(args.docid_map.read_text())
     index = faiss.read_index(str(args.index / "index.faiss"))
