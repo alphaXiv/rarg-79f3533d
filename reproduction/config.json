@@ -1,0 +1,13 @@
+{
+  "condition": "dci",
+  "query_limit": 16,
+  "workers": 4,
+  "max_steps": 6,
+  "matches_per_step": 30,
+  "rerank_candidates": 500,
+  "entry_paragraphs": 8,
+  "entry_document_limit": 20,
+  "agent_model": "Qwen/Qwen3-8B",
+  "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
+  "seed": 24223
+}
