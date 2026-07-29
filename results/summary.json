@@ -51,7 +51,8 @@
       "peak_concurrent_gpu_count": 16,
       "successful_evidence_window_started_utc": "2026-07-29T01:21:34Z",
       "successful_evidence_window_finished_utc": "2026-07-29T02:06:37Z",
-      "wall_hours": 0.751
+      "successful_evidence_window_wall_hours": 0.751,
+      "wall_hours": 1.225558
     }
   }
 }

@@ -17,7 +17,7 @@ The experiment used the public `DCI-Agent/corpus` BrowseComp-Plus parquet, expor
 - **RARG+:** RARG plus eight query-relevant entry paragraphs.
 - **RARG++:** RARG+ plus reranking of a bounded 120-match local pool.
 
-Runs used Kubernetes on NVIDIA RTX PRO 6000 Blackwell GPUs, with four GPUs per condition and a peak of 16 concurrent GPUs. The successful evidence window was 2026-07-29 01:21:34–02:06:37 UTC: **0.751 wall hours**.
+Runs used Kubernetes on NVIDIA RTX PRO 6000 Blackwell GPUs, with four GPUs per condition and a peak of 16 concurrent GPUs. The queue runner observed **1.225558 hours of Kubernetes campaign wall time**, including setup and evidence-producing runs.
 
 ## Finding 1: document order changed when evidence arrived
 

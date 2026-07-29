@@ -7,7 +7,7 @@
 
 The strongest result is mechanistic: relevance moved the median gold document from corpus rank **25,912.5 to 154.5** (122× median speedup), and local reranking raised first-30 gold visibility from 15.6% to 21.9%. The answer gain was concentrated in the second fixed 16-question slice, so the direction is encouraging but not a full match to the paper's 78–84% result.
 
-This bounded reproduction substituted Qwen3-8B for the proprietary GPT-5.4-mini-family agent and judge, Qwen3-Embedding-0.6B for relevance, and 32 of the paper's 100 questions; it omitted BRIGHT and the 1M corpus. Formal runs used **Kubernetes** on **NVIDIA RTX PRO 6000 Blackwell** GPUs, four GPUs per run, **16 GPUs peak concurrent**, and a measured successful-evidence window of **0.751 wall hours**.
+This bounded reproduction substituted Qwen3-8B for the proprietary GPT-5.4-mini-family agent and judge, Qwen3-Embedding-0.6B for relevance, and 32 of the paper's 100 questions; it omitted BRIGHT and the 1M corpus. Formal runs used **Kubernetes** on **NVIDIA RTX PRO 6000 Blackwell** GPUs, four GPUs per run, **16 GPUs peak concurrent**, and **1.225558 hours of observed Kubernetes campaign wall time**.
 
 - [Read the illustrated tutorial-style report](reports/rarg-reproduction/report.md)
 - [Explore the self-contained marimo notebook](notebooks/rarg_reproduction.py)

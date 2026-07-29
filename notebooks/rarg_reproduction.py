@@ -93,8 +93,9 @@ def _(mo):
     served as controls.
 
     Formal runs used **Kubernetes**, four NVIDIA RTX PRO 6000 Blackwell GPUs per
-    condition, and **16 GPUs at peak concurrency**. The successful evidence
-    window was 2026-07-29 01:21:34–02:06:37 UTC, or **0.751 wall hours**.
+    condition, and **16 GPUs at peak concurrency**. The queue runner observed
+    **1.225558 hours of Kubernetes campaign wall time**, including setup and
+    evidence-producing runs.
     """)
     return
 
