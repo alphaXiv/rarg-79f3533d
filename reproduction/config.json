@@ -1,6 +1,7 @@
 {
   "condition": "rarg",
   "query_limit": 16,
+  "query_offset": 16,
   "workers": 4,
   "max_steps": 6,
   "matches_per_step": 30,
