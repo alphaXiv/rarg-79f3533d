@@ -1,5 +1,5 @@
 {
-  "condition": "dci",
+  "condition": "rarg_plus",
   "query_limit": 16,
   "workers": 4,
   "max_steps": 6,
